@@ -5,8 +5,9 @@ import React, { useState } from 'react';
 import './SignUp.css'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth";
 import app from '../../firebase/firebase.config';
+import { Link } from 'react-router-dom';
 
 const auth = getAuth(app);
 
@@ -28,11 +29,11 @@ const SignUp = () => {
         const password = event.target.password.value;
         console.log(email, password);
 
-        if(!/(?=.*[0-9])/.test(password)){
+        if (!/(?=.*[0-9])/.test(password)) {
             setErrorMessage('Please add atleast one number');
             return;
         }
-       else if(!/(?=.*[A-Z])/.test(password)){
+        else if (!/(?=.*[A-Z])/.test(password)) {
             setErrorMessage('Please add atleast one CAPITAL letter');
             return;
         }
@@ -42,10 +43,14 @@ const SignUp = () => {
             .then(userCredential => {
                 // console.log(auth);
                 console.log(userCredential);
-                const loggedinUser = userCredential.user;
+                const loggedinUser = userCredential.user.email;
                 // console.log(loggedinUser);
+                console.log(loggedinUser);
                 setErrorMessage("");
+                event.target.reset();
+
                 setSuccess(" User has been created successfully");
+                emailVerification(loggedinUser);
             })
 
             .catch(error => {
@@ -56,7 +61,15 @@ const SignUp = () => {
                 setSuccess("");
             })
 
-            event.target.reset();
+    }
+    // send email verification link
+    const emailVerification = (user) => {
+        sendEmailVerification(user)
+            .then((result) => {
+                console.log(result);
+                alert("email sent forverification");
+            })
+
     }
 
     // const handleEmail = (event) => {
@@ -68,27 +81,31 @@ const SignUp = () => {
     // }
 
     return (
-        <Form onSubmit={handelSubmit} className='w-50 mx-auto'>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control  type="email" name='email' placeholder="Enter email" required />
+        <div>
+            <h2 className="text-center">Sign Up </h2>
+            <Form onSubmit={handelSubmit} className='w-50 mx-auto'>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" name='email' placeholder="Enter email" required />
 
-            </Form.Group>
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control name='password' type="password" placeholder="Password" required />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Accept Terms and Conditions" />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-                Submit
-            </Button>
-            <p className="text-danger"> {errorMessage} </p>
-            <p className=".text-success"> {success} </p>
-        </Form>
-       
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control name='password' type="password" placeholder="Password" required />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Accept Terms and Conditions" />
+                </Form.Group>
+                <Button variant="primary" type="submit">
+                    Submit
+                </Button>
+                <p className="text-danger"> {errorMessage} </p>
+                <p className=".text-success"> {success} </p>
+            </Form>
+            <p className='text-center'>Already User <Link to="/login">Login</Link> </p>
+        </div>
+
     );
 };
 
