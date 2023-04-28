@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import Form from 'react-bootstrap/Form';
@@ -7,13 +8,15 @@ import app from '../../firebase/firebase.config';
 
 const auth = getAuth(app);
 import './Login.css'
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { Link } from 'react-router-dom';
+import { useRef } from 'react';
 
 const Login = () => {
 
     const [errorMessage, setErrorMessage] = useState("");
     const [success, setSuccess] = useState("");
+    const emailRef = useRef();
 
 
     const handelSubmit = (event) => {
@@ -23,8 +26,7 @@ const Login = () => {
         const email = event.target.email.value;
         const password = event.target.password.value;
         console.log(email, password);
-
-
+        
 
         // siging in with email and password
         signInWithEmailAndPassword(auth, email, password)
@@ -42,22 +44,32 @@ const Login = () => {
     }
 
 
+    const handleResetPassword = (event) => {
+        const email = emailRef.current.value;
+        console.log(email);
+        if(!email){
+            alert("please provide your email");
+        }
 
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+          alert("password esent link sent");
+        })
 
-    // const handleEmail = (event) => {
-    //     // setEmail(event.target.value);
-    // }
+       .catch((error) => {
+       console.log(error.message);
+       })
 
-    // const handlePwd = (event) => {
-    //     // console.log(event.target.value);
-    // }
+    }
+
+    
     return (
         <div>
             <h2 className='text-center'>Login here</h2>
             <Form onSubmit={handelSubmit} className='w-50 mx-auto'>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" name='email' placeholder="Enter email" required />
+                    <Form.Control ref={emailRef} type="email" name='email' placeholder="Enter email" required />
 
                 </Form.Group>
 
@@ -74,6 +86,12 @@ const Login = () => {
                 <p className="text-danger"> {errorMessage} </p>
                 <p className="text-success"> {success} </p>
             </Form>
+            <p className="text-primary text-center">
+                Forgot password? Please
+                 <button onClick={handleResetPassword} className="btn btn-link">
+                    Reset Password
+                </button>
+            </p>
             <p className='text-center'>New to this website please <Link to="/signup"> Sign Up</Link> </p>
         </div>
     );

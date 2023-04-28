@@ -13,9 +13,6 @@ const auth = getAuth(app);
 
 
 
-
-
-
 const SignUp = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [success, setSuccess] = useState("");
@@ -41,7 +38,7 @@ const SignUp = () => {
         // creating User in Firebase
         createUserWithEmailAndPassword(auth, email, password)
             .then(userCredential => {
-                // console.log(auth);
+                console.log(auth);
                 console.log(userCredential);
                 const loggedinUser = userCredential.user.email;
                 // console.log(loggedinUser);
@@ -62,23 +59,20 @@ const SignUp = () => {
             })
 
     }
+
+
     // send email verification link
-    const emailVerification = (user) => {
-        sendEmailVerification(user)
-            .then((result) => {
-                console.log(result);
-                alert("email sent forverification");
-            })
+    const emailVerification = (loggedinUser) => {
+        console.log(loggedinUser);
+        sendEmailVerification(auth.currentUser)
+            .then(() => {
+                console.log(auth.currentUser);
+                console.log("sent");
+                alert("email sent");
+            });
 
     }
 
-    // const handleEmail = (event) => {
-    //     // setEmail(event.target.value);
-    // }
-
-    // const handlePwd = (event) => {
-    //     // console.log(event.target.value);
-    // }
 
     return (
         <div>
