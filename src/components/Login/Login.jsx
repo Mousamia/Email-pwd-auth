@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import { useRef } from 'react';
 
 const Login = () => {
-
+    const [user, setUser] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [success, setSuccess] = useState("");
     const emailRef = useRef();
@@ -75,7 +75,9 @@ const Login = () => {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 // The signed-in user info.
-                const user = result.user;
+                const loogedinUser = result.user;
+                console.log(loogedinUser);
+                setUser(loogedinUser);
                 // IdP data available using getAdditionalUserInfo(result)
                 // ...
             }).catch((error) => {
@@ -94,6 +96,7 @@ const Login = () => {
 
     return (
         <div>
+          
             <h2 className='text-center'>Login here</h2>
             <Form onSubmit={handelSubmit} className='w-50 mx-auto'>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -124,7 +127,8 @@ const Login = () => {
             <p className='text-center'>New to this website please <Link to="/signup"> Sign Up</Link> </p>
 
             <div>
-                <p> Login with   <button className='google' onClick={() => handleGoogleLogin()}> Google </button></p>
+                <p> Login with   <button className='j' onClick={() => handleGoogleLogin()}> Google </button></p>
+                <h3> user : {user?.displayName} </h3>
 
             </div>
         </div>
