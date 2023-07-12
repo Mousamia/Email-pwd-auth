@@ -5,8 +5,8 @@ import './Home.css'
 
 const Home = () => {
     return (
-        <div>
-            <Header/>
+        <div> I paradigms your home
+            <Header />
         </div>
     );
 };
