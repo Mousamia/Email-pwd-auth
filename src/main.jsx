@@ -12,29 +12,34 @@ import Main from './components/layout/Main';
 import Login from './components/Login/Login';
 // import SignIn from './components/SignUp/SignUp';
 import SignUp from './components/SignUp/SignUp';
+import ContextUth from './components/providers/ContextUth';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<Main/>,
+    element: <Main />,
     children: [
       {
         path: "/login",
-        element: <Login/>
+        element: <Login />
       },
 
       {
         path: "/signup",
-        element: <SignUp/>
+        element: <SignUp />
       },
-    ] 
-   
+    ]
+
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-   
-    <RouterProvider router={router} />
+   <ContextUth>
+   <RouterProvider router={router} />
+
+   </ContextUth>
+    {/*  */}
+
   </React.StrictMode>
 );
